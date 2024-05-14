@@ -1,10 +1,19 @@
+using EcomAPI.Payment;
+using System.Text;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+var config =
+    new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", true)
+        .AddEnvironmentVariables()
+        .Build();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -14,7 +23,30 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
+
+
+var paymentHandler = new PaymentHandler();
+
+
+app.MapPost("/PaymentHandler", async delegate (HttpContext context)
+{
+    string jsonstring;
+    using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
+    {
+
+         jsonstring = await reader.ReadToEndAsync();
+
+      
+    }
+
+
+    return Environment.GetEnvironmentVariable("PAYPAL_CLIENTID"); ;
+}).WithName("PaymentHandler")
+.WithOpenApi();
+
+
 
 var summaries = new[]
 {

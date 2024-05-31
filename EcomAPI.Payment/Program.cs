@@ -2,6 +2,7 @@ using EcomAPI.Payment;
 using System.Text;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -33,16 +34,16 @@ var paymentHandler = new PaymentHandler();
 app.MapPost("/PaymentHandler", async delegate (HttpContext context)
 {
     string jsonstring;
-    using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
-    {
+    //using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
+    //{
 
-         jsonstring = await reader.ReadToEndAsync();
+    //     jsonstring = await reader.ReadToEndAsync();
 
       
-    }
+    //}
 
 
-    return Environment.GetEnvironmentVariable("PAYPAL_CLIENTID"); ;
+    return paymentHandler.HandlePaymentAsync("lol");
 }).WithName("PaymentHandler")
 .WithOpenApi();
 
